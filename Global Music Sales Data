@@ -1,0 +1,45 @@
+# The following analysis is taken from multiple datasets from the Global Music Sales data.
+
+#1. Show Customers(their full names, customer ID and country) who are not in the US.
+SELECT CustomerId,FirstName,LastName,Country
+FROM customers
+WHERE Country ='USA'
+;
+
+#2. Show only the Customers from Brazil
+SELECT CustomerId,FirstName,LastName,Country
+FROM customers
+WHERE Country ='Brazil'
+;
+
+#3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT CustomerId,FirstName,LastName,InvoiceId,InvoiceDate,BillingCountry
+FROM customers as cust
+LEFT JOIN invoices as inv
+ON cust.CustomerId = inv.CustomerId
+WHERE Country = 'Brazil'
+;
+
+#4. Show the Employees who are Sales Agents.
+SELECT EmployeeId,LastName,FirstName,Title
+FROM employees
+WHERE Title = 'Sales Support Agent'
+;
+
+#5. Find a unique/distinct list of billing countries from the Invoice table.
+SELECT DISTINCT BillingCountry
+FROM invoices
+ORDER BY BillingCountry asc;
+
+#6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+SELECT inv.InvoiceId,inv.InvoiceDate,emp.EmployeeId,emp.FirstName,emp.LastName,emp.Title
+FROM invoices as inv
+INNER JOIN customers as cust
+ON inv.CustomerId = cust.CustomerId
+LEFT JOIN employees as emp
+ON emp.Country = cust.Country
+WHERE Title ='Sales Support Agent'
+ORDER BY Title 
+;
+
+#7. 
