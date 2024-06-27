@@ -1,0 +1,69 @@
+# The following analysis is based on a dataset that specialises in domestic violence of women in a specific rural area of a developing country.
+
+#1. Show only the women who are unemployed and have gone through violence.
+SELECT "SL. No", Age, "Education ", "Employment ", "Marital status ", "Violence "
+FROM domestic_violence
+WHERE "Employment " = 'unemployed' and "Violence " = 'yes'
+;
+
+#2. How many of the women are under the age of 18?
+SELECT COUNT(*) AS NumberOfWomenUnder18
+FROM domestic_violence
+WHERE CAST(Age AS INTEGER) < 18;
+
+#3. Show the women that are strictly married.
+SELECT "SL. No","Marital status "
+FROM domestic_violence
+WHERE "Marital status " = 'married'
+;
+
+#4. Organise the womens income as "Very Low Income", "Low Middle Income" , "Upper Middle Income" and "High Income".
+SELECT 
+    "SL. No",
+    "Employment ",
+    Income,
+    CASE
+        WHEN CAST(Income AS NUMERIC) BETWEEN 0 AND 1500 THEN 'Very Low Income'
+        WHEN CAST(Income AS NUMERIC) BETWEEN 1500 AND 5000 THEN 'Low Middle Income'
+        WHEN CAST(Income AS NUMERIC) BETWEEN 5000 AND 8000 THEN 'Upper Middle Income'
+        ELSE 'High Income'
+    END AS IncomeCategory
+FROM 
+    domestic_violence;
+
+#5. What is the average age of women who experience physical abuse?
+SELECT ROUND(AVG( Age)) as Avg_age
+FROM domestic_violence
+WHERE "Violence " = 'yes'
+;
+
+#6. How many of these women have been physically abused?
+SELECT COUNT(*) AS NumberOfPhysicallyAbusedWomen
+FROM domestic_violence
+WHERE "Violence " = 'yes';
+
+#7. Count the number of "Physical & Sexual abuse" and "Mental and Emotional Abuse" according to the violence data offered.
+SELECT 
+    SUM(CASE WHEN "Violence " LIKE '%yes%' THEN 1 ELSE 0 END) AS NumberOfPhysicalAndSexualAbuse,
+    SUM(CASE WHEN "Violence " LIKE '%no%' THEN 1 ELSE 0 END) AS NumberOfEmotionalAndMentalAbuse
+FROM 
+    domestic_violence;
+
+#8. Calculate the amount women who potentially may go through "Economic Abuse".
+SELECT COUNT(*) AS NumberOfEconomicAbuse
+FROM domestic_violence
+WHERE "Employment " = 'employed' 
+   OR "Employment " = 'semi employed'
+;
+
+#9. Categorize abuse as potential "Relationship Abuse" and potential "Family Abuse" according to the marital status data offered.
+SELECT 
+    "SL. No",
+    "Marital status ",
+    CASE
+        WHEN LOWER("Marital status ") = 'married' THEN 'Relationship Abuse'
+        WHEN LOWER("Marital status ") = 'unmarred' THEN 'Family Abuse'
+        ELSE 'Other'
+    END AS AbuseType
+FROM 
+    domestic_violence;
